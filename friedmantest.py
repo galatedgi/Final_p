@@ -29,7 +29,7 @@ if __name__ == '__main__':
     #     groups.append(group_arr)
 
     stat, p = friedmanchisquare(*avg)
-    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    print('Statistics=%.10f, p=%.10f' % (stat, p))
 
     alpha = 0.05
 
