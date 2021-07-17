@@ -29,7 +29,12 @@ def friedman_test():
     else:
         print('Different distribution (reject H0)')
         # hoc
-        print(sp.posthoc_nemenyi_friedman(avg))
+        hoc_test=sp.posthoc_nemenyi_friedman(avg)
+        col_name={}
+        for a in algo:
+            col_name.update({algo.index(a):a})
+        hoc_test.rename(columns=col_name,index=col_name,inplace = True)
+        print(hoc_test)
 
 
 if __name__ == '__main__':
