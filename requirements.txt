@@ -1,0 +1,26 @@
+certifi==2021.5.30
+cycler==0.10.0
+joblib @ file:///home/conda/feedstock_root/build_artifacts/joblib_1612898609989/work
+kiwisolver @ file:///D:/bld/kiwisolver_1610099953470/work
+matplotlib @ file:///D:/bld/matplotlib-suite_1620506140045/work
+numpy @ file:///D:/bld/numpy_1624400134018/work
+olefile @ file:///home/conda/feedstock_root/build_artifacts/olefile_1602866521163/work
+pandas @ file:///D:/bld/pandas_1625236651035/work
+patsy==0.5.1
+Pillow @ file:///D:/bld/pillow_1625677963956/work
+pyparsing==2.4.7
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1612179539967/work
+scikit-learn @ file:///D:/bld/scikit-learn_1619628870631/work
+scikit-multiflow @ file:///D:/bld/scikit-multiflow_1604245746846/work
+scikit-posthocs==0.6.7
+scipy @ file:///C:/bld/scipy_1624825047559/work
+seaborn==0.11.1
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+sklearn==0.0
+sortedcontainers @ file:///home/conda/feedstock_root/build_artifacts/sortedcontainers_1621217038088/work
+statsmodels==0.12.2
+threadpoolctl @ file:///home/conda/feedstock_root/build_artifacts/threadpoolctl_1626092076920/work
+tornado @ file:///D:/bld/tornado_1610094910414/work
+tqdm @ file:///tmp/build/80754af9/tqdm_1625563689033/work
+wincertstore==0.2
