@@ -1,13 +1,13 @@
 import os
-
-import numpy as np
 import pandas as pd
 from scipy.stats import friedmanchisquare
 import scikit_posthocs as sp
 
 
-if __name__ == '__main__':
-    # Fridman Test
+def friedman_test():
+    """
+    This function is the friedman test
+    """
     avg=[]
     algo=["CL","CL_s","RF"]
     df=pd.read_csv("results.csv")
@@ -18,15 +18,6 @@ if __name__ == '__main__':
             mean=df_exp['AUC'].mean()
             avg3.append(mean)
         avg.append(avg3)
-
-
-    # data=np.array(df)
-    # new_data = data.drop('datasetName', axis=1)
-    # groups = []
-    # for i in range(new_data.shape[0]):
-    #     group = new_data.iloc[i, :]
-    #     group_arr = [group[0], group[1], group[2]]
-    #     groups.append(group_arr)
 
     stat, p = friedmanchisquare(*avg)
     print('Statistics=%.10f, p=%.10f' % (stat, p))
@@ -39,4 +30,8 @@ if __name__ == '__main__':
         print('Different distribution (reject H0)')
         # hoc
         print(sp.posthoc_nemenyi_friedman(avg))
+
+
+if __name__ == '__main__':
+    friedman_test()
 

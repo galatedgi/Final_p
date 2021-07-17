@@ -1,103 +1,36 @@
-import csv
-import math
 import os
 from time import time
-
-import sklearn
-from sklearn import svm
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, roc_auc_score, average_precision_score
 from sklearn.model_selection import KFold, RandomizedSearchCV
 from tqdm import tqdm
+from CL import svm_score,get_data_by_rank,write
 
 
-def svm_score(data,class_index=-1):
-    y_train= data[:, class_index:]
-    x_train= data[:, :class_index]
-    train_score=transfer_values_svm_scores(x_train,y_train)
-    return rank_data_according_to_score(train_score,y_train)
 
-def get_data_by_rank(data,rank):
-    new_data=[]
-    data=(np.array(data))
-    for i in rank:
-        record=data[i]
-        new_data.append(record)
-    return np.array(new_data)
 
 def CL_s(data,score_func=svm_score):
+    """
+    This function is the implement the improvement for the CL algorithm from the paper
+    :param data:The dataset
+    :type data:ndarray
+    :param score_func:The score function
+    :type score_func:function
+    :return:The data batches
+    :rtype:list of ndarray
+    """
     rank=score_func(data)
     new_data=get_data_by_rank(data,rank)
     return new_data
 
-def transfer_values_svm_scores(train_x, train_y):
-    clf = svm.SVC(probability=True)
-    print("fitting svm")
-    clf.fit(train_x, train_y)
-    # if len(test_x) != 0:
-    #     print("evaluating svm")
-    #     test_scores = clf.predict_proba(test_x)
-    #     print('accuracy for svm = ', str(np.mean(np.argmax(test_scores, axis=1) == test_y)))
-    # else:
-    #     test_scores = []
-    train_scores = clf.predict_proba(train_x)
-    return train_scores
-
-def rank_data_according_to_score(train_scores, y_train, reverse=False, random=False):
-    train_size, _ = train_scores.shape
-    y_train=np.array(y_train)
-    train_scores=np.array(train_scores)
-    y_train=y_train.reshape(-1)
-    y_train=y_train.astype(int)
-    hardness_score = train_scores[list(range(train_size)), y_train]
-    res = np.asarray(sorted(range(len(hardness_score)), key=lambda k: hardness_score[k], reverse=True))
-    if reverse:
-        res = np.flip(res, 0)
-    if random:
-        np.random.shuffle(res)
-    return res
-
-
-
-def write(datasets_name, algo_name,data,test_index,best_clf,t_time,best_params,cv):
-    test_data = data[test_index]
-    y_test = np.array(test_data[:, -1:])
-    x_test = test_data[:, :-1]
-
-    pred_time = time()
-
-    pred = best_clf.predict(x_test)
-
-    pred_time = time() - pred_time
-    pred_time = pred_time / y_test.shape[0]
-    pred_time = pred_time * 1000
-
-    acc = accuracy_score(y_test, pred)
-
-    y_score = best_clf.predict_proba(x_test)
-    confusion_matrix = sklearn.metrics.confusion_matrix(y_test, pred)
-    tn, fp, fn, tp = confusion_matrix.ravel()
-    precision = precision_score(y_test, pred)
-
-    tpr = tp / (tp + fn)
-    fpr = 1 - tpr
-
-    auc = roc_auc_score(y_test, y_score[:, 1])
-
-    pr_curve = average_precision_score(y_test, y_score[:, 1])
-
-    with open('./results.csv', 'a') as f:
-        w = csv.writer(f)
-        row = [datasets_name, algo_name, str(cv), best_params, str(acc), str(tpr), str(fpr), str(precision), str(auc),str(pr_curve), str(t_time), str(pred_time)]
-        w.writerow(row)
-
-
-
 def main(path):
+    """
+    The main function
+    :param path: Path to the DS
+    :type path: String
+    """
     algo_name="CL_s"
-    # path="datasets/chess-krvkp.csv"
     df=pd.read_csv(path)
     datasets_name=path.split('/')[-1]
     data=np.array(df)

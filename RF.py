@@ -9,45 +9,16 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, roc_auc_score, average_precision_score
 from sklearn.model_selection import KFold, RandomizedSearchCV
 from tqdm import tqdm
-
-
-def write(datasets_name, algo_name,data,test_index,best_clf,t_time,best_params,cv):
-    test_data = data[test_index]
-    y_test = np.array(test_data[:, -1:])
-    x_test = test_data[:, :-1]
-
-    pred_time = time()
-
-    pred = best_clf.predict(x_test)
-
-    pred_time = time() - pred_time
-    pred_time = pred_time / y_test.shape[0]
-    pred_time = pred_time * 1000
-
-    acc = accuracy_score(y_test, pred)
-
-    y_score = best_clf.predict_proba(x_test)
-    confusion_matrix = sklearn.metrics.confusion_matrix(y_test, pred)
-    tn, fp, fn, tp = confusion_matrix.ravel()
-    precision = precision_score(y_test, pred)
-
-    tpr = tp / (tp + fn)
-    fpr = 1 - tpr
-
-    auc = roc_auc_score(y_test, y_score[:, 1])
-
-    pr_curve = average_precision_score(y_test, y_score[:, 1])
-
-    with open('./results.csv', 'a') as f:
-        w = csv.writer(f)
-        row = [datasets_name, algo_name, str(cv), best_params, str(acc), str(tpr), str(fpr), str(precision), str(auc),str(pr_curve), str(t_time), str(pred_time)]
-        w.writerow(row)
-
+from CL import write
 
 
 def main(path):
+    """
+    The main function
+    :param path: Path to the DS
+    :type path: String
+    """
     algo_name="RF"
-    # path="datasets/chess-krvkp.csv"
     df=pd.read_csv(path)
     datasets_name=path.split('/')[-1]
     data=np.array(df)
